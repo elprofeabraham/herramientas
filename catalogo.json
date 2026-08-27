@@ -1,0 +1,12 @@
+{
+  "nombre": "elprofeabraham",
+  "tituloSitio": "Herramientas · El Profe Abraham",
+  "owner": { "name": "El Profe Abraham", "url": "https://elprofeabraham.com" },
+  "github": "https://github.com/elprofeabraham/herramientas",
+  "marketplaceAdd": "elprofeabraham/herramientas",
+  "sitioBase": "https://elprofeabraham.com",
+  "cta": {
+    "texto": "¿Quieres esta skill? Comenta la palabra VERDE en el video y te la mando.",
+    "comunidad": "https://elprofeabraham.com/#comunidades"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "url": "https://tu-sitio.com/",
+  "max_pages": 8,
+  "psi_runs": 3,
+  "brand": { "name": "Tu Marca · Auditoría", "color": "#0FA3A3" },
+  "stack": {
+    "cms": "WordPress",
+    "theme": "Hello Elementor",
+    "builder": "Elementor Pro",
+    "cache": "WP Rocket",
+    "images": "Imagify",
+    "seo": "Rank Math",
+    "notes": "El plugin AMP puede afectar el TBT en móvil"
+  },
+  "wp": {
+    "baseUrl": "https://tu-sitio.com",
+    "username": "TU_USUARIO_WP",
+    "appPassword": "APP_PASSWORD_DE_WORDPRESS (Perfil → Contraseñas de aplicación)"
+  },
+  "ssh": {
+    "host": "TU_HOST_O_IP",
+    "user": "USUARIO_SSH",
+    "port": 22,
+    "key": "~/.ssh/id_rsa",
+    "wpPath": "~/public_html"
+  },
+  "cpanel": {
+    "host": "https://TU_CPANEL:2083",
+    "user": "USUARIO_CPANEL",
+    "apiToken": "TOKEN_CPANEL (cPanel → Manage API Tokens)"
+  },
+  "_seguridad": "NO compartas este archivo con credenciales reales. Guárdalo local. Mejor aún: deja los valores en blanco y usa variables de entorno. Para SOLO AUDITAR basta con 'url', 'stack' y 'brand'."
+}

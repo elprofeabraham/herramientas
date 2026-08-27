@@ -1,0 +1,31 @@
+{
+  "name": "elprofeabraham",
+  "owner": {
+    "name": "El Profe Abraham",
+    "url": "https://elprofeabraham.com"
+  },
+  "metadata": {
+    "description": "Herramientas (skills) de IA de El Profe Abraham para Claude Code.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "seo-cwv",
+      "source": "./plugins/seo-cwv",
+      "description": "Audita y arregla SEO, AEO y Core Web Vitals de un sitio, con reporte en PDF de tu marca.",
+      "version": "1.0.0",
+      "author": {
+        "name": "El Profe Abraham"
+      },
+      "license": "MIT",
+      "keywords": [
+        "seo",
+        "core-web-vitals",
+        "aeo",
+        "wordpress",
+        "auditoria",
+        "pagespeed"
+      ]
+    }
+  ]
+}

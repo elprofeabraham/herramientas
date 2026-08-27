@@ -1,0 +1,9 @@
+{
+  "name": "seo-cwv",
+  "version": "1.0.0",
+  "description": "Audita y arregla SEO, AEO y Core Web Vitals de un sitio, con reporte en PDF de tu marca.",
+  "author": { "name": "El Profe Abraham", "url": "https://elprofeabraham.com" },
+  "homepage": "https://elprofeabraham.com/herramientas/seo-cwv/",
+  "license": "MIT",
+  "keywords": ["seo", "core-web-vitals", "aeo", "wordpress", "auditoria", "pagespeed"]
+}

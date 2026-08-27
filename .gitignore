@@ -1,0 +1,15 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Configs con credenciales / clientes (NUNCA subir)
+# (la skill sólo debe llevar EXAMPLE-site.json)
+**/config/*.json
+!**/config/EXAMPLE-site.json
+**/config/history.json
+**/config/report.*
+
+# Reportes y PDFs generados
+*.pdf
+*.DS_Store
+Thumbs.db

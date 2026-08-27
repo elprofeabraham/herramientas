@@ -1,0 +1,217 @@
+#!/usr/bin/env node
+// Generador de "El Profe Abraham · Herramientas"
+// Lee catalogo.json + fichas/*.json y genera:
+//   - .claude-plugin/marketplace.json      (para instalar con /plugin)
+//   - web/herramientas/<slug>/index.html    (ficha por skill)
+//   - web/herramientas/index.html           (índice tipo lista)
+// Uso:  node generar.mjs
+
+import { readFileSync, writeFileSync, readdirSync, mkdirSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const ROOT = dirname(fileURLToPath(import.meta.url));
+const cat = JSON.parse(readFileSync(join(ROOT, "catalogo.json"), "utf8"));
+
+const fichas = readdirSync(join(ROOT, "fichas"))
+  .filter((f) => f.endsWith(".json"))
+  .map((f) => JSON.parse(readFileSync(join(ROOT, "fichas", f), "utf8")));
+
+// ---------- utilidades ----------
+const esc = (s = "") =>
+  String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const li = (arr) => arr.map((x) => `<li>${esc(x)}</li>`).join("\n");
+
+// ---------- 1) marketplace.json ----------
+const marketplace = {
+  name: cat.nombre,
+  owner: cat.owner,
+  metadata: {
+    description: `Herramientas (skills) de IA de ${cat.owner.name} para Claude Code.`,
+    version: "1.0.0",
+  },
+  plugins: fichas.map((f) => ({
+    name: f.id,
+    source: f.marketplace.source,
+    description: f.marketplace.descripcionCorta,
+    version: f.marketplace.version,
+    author: { name: cat.owner.name },
+    license: f.marketplace.licencia,
+    keywords: f.marketplace.keywords,
+  })),
+};
+mkdirSync(join(ROOT, ".claude-plugin"), { recursive: true });
+writeFileSync(
+  join(ROOT, ".claude-plugin", "marketplace.json"),
+  JSON.stringify(marketplace, null, 2) + "\n"
+);
+
+// ---------- estilos compartidos ----------
+const CSS = `
+:root{
+  --bg:#0B1220; --panel:#111a2e; --panel2:#0f1728; --line:#1e2b45;
+  --text:#E6EDF6; --muted:#93A4BF; --teal:#20C4C4; --cyan:#38BDF8;
+  --green:#22C55E; --amber:#F59E0B; --red:#EF4444;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:"Google Sans","Product Sans",system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--cyan);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:820px;margin:0 auto;padding:32px 20px 80px}
+.top{display:flex;align-items:center;gap:12px;padding:18px 0;border-bottom:1px solid var(--line);
+  font-weight:600;color:var(--muted)}
+.top .dot{width:10px;height:10px;border-radius:50%;background:var(--teal);box-shadow:0 0 12px var(--teal)}
+.hero{padding:40px 0 8px}
+.emoji{font-size:44px}
+h1{font-size:34px;line-height:1.15;margin:14px 0 10px}
+.lead{font-size:19px;color:var(--muted);margin:0 0 18px}
+.badge{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  padding:4px 10px;border-radius:999px;background:rgba(34,197,94,.12);color:var(--green);
+  border:1px solid rgba(34,197,94,.35)}
+.sec{margin-top:34px;padding-top:26px;border-top:1px solid var(--line)}
+.kick{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin:0 0 10px}
+h2{font-size:22px;margin:0 0 12px}
+ul{margin:0;padding-left:22px}
+li{margin:6px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin-top:14px}
+pre{background:#060B16;border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:auto;margin:8px 0}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px;color:#CDEBEB}
+.step{margin:16px 0}
+.step p{margin:0 0 6px;color:var(--muted)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 6px}
+.tab{font-size:13px;font-weight:600;color:var(--muted);border:1px solid var(--line);
+  border-radius:999px;padding:5px 12px}
+.btnrow{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+.btn{display:inline-block;font-weight:700;padding:12px 20px;border-radius:10px;
+  background:linear-gradient(135deg,var(--teal),var(--cyan));color:#04121a !important}
+.btn:hover{text-decoration:none;filter:brightness(1.06)}
+.btn.ghost{background:transparent;color:var(--cyan) !important;border:1px solid var(--line)}
+.hook{background:rgba(32,196,196,.08);border:1px solid rgba(32,196,196,.35);border-radius:14px;
+  padding:18px 22px;margin-top:34px}
+.hook strong{color:var(--teal)}
+.foot{margin-top:56px;padding-top:22px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+.grid{display:grid;gap:16px;margin-top:24px}
+.tile{display:block;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px}
+.tile:hover{text-decoration:none;border-color:var(--teal)}
+.tile h3{margin:6px 0 6px;color:var(--text);font-size:20px}
+.tile p{margin:0;color:var(--muted)}
+.tile .badge{margin-top:12px}
+`;
+
+const shell = (title, body) => `<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(title)}</title>
+<meta name="description" content="${esc(title)} — ${esc(cat.owner.name)}">
+<style>${CSS}</style>
+</head><body><div class="wrap">
+<div class="top"><span class="dot"></span> ${esc(cat.owner.name)} · Herramientas</div>
+${body}
+<div class="foot">Creado y compartido por ${esc(cat.owner.name)} · Licencia MIT ·
+<a href="${esc(cat.github)}">GitHub</a></div>
+</div></body></html>`;
+
+// ---------- 2) ficha por skill ----------
+const fichaHTML = (f) => {
+  const comoSeUsa = f.comoSeUsa
+    .map(
+      (s) =>
+        `<div class="step"><p>${esc(s.paso)}</p><pre><code>${esc(s.code)}</code></pre></div>`
+    )
+    .join("\n");
+
+  const body = `
+<div class="hero">
+  <div class="emoji">${esc(f.emoji || "🧩")}</div>
+  <span class="badge">${esc(f.estado || "Disponible")}</span>
+  <h1>${esc(f.nombre)}</h1>
+  <p class="lead">${esc(f.unaLinea)}</p>
+</div>
+
+<div class="sec">
+  <p class="kick">Qué hace</p>
+  <ul>${li(f.queHace)}</ul>
+</div>
+
+<div class="sec">
+  <p class="kick">Qué necesitas</p>
+  <ul>${li(f.queNecesitas)}</ul>
+</div>
+
+<div class="sec">
+  <p class="kick">01 · Qué es</p>
+  <p>${esc(f.queEs)}</p>
+</div>
+
+<div class="sec">
+  <p class="kick">02 · Cómo se usa</p>
+  ${comoSeUsa}
+</div>
+
+<div class="sec">
+  <p class="kick">03 · Instalar</p>
+
+  <div class="card">
+    <div class="tabs"><span class="tab">Terminal</span><span class="tab">App de escritorio</span></div>
+    <p style="color:var(--muted);margin:0 0 6px">1) Agrega el catálogo de El Profe Abraham (una sola vez):</p>
+    <pre><code>/plugin marketplace add ${esc(cat.marketplaceAdd)}</code></pre>
+    <p style="color:var(--muted);margin:10px 0 6px">2) Instala la skill:</p>
+    <pre><code>/plugin install ${esc(f.id)}@${esc(cat.nombre)}</code></pre>
+    <p style="color:var(--muted);margin:10px 0 0">En la <strong>app de escritorio</strong> es igual: abre el panel con
+    <code>/plugin</code>, busca <strong>${esc(f.id)}</strong> en el catálogo <strong>${esc(cat.nombre)}</strong> y dale Instalar.</p>
+  </div>
+
+  <div class="card">
+    <div class="tabs"><span class="tab">Alternativa: clonar</span></div>
+    <p style="color:var(--muted);margin:0 0 6px">Si prefieres copiar la carpeta a mano:</p>
+    <pre><code>git clone ${esc(cat.github)}.git
+# copia  plugins/${esc(f.id)}/skills/${esc(f.id)}  dentro de tu carpeta ~/.claude/skills/</code></pre>
+  </div>
+
+  <div class="btnrow">
+    <a class="btn" href="${esc(cat.github)}">Ver en GitHub</a>
+    <a class="btn ghost" href="/herramientas/">Todas las herramientas</a>
+  </div>
+</div>
+
+<div class="hook"><strong>Siguiente paso →</strong> ${esc(f.gancho)}</div>
+`;
+  return shell(`${f.nombre} · ${cat.owner.name}`, body);
+};
+
+for (const f of fichas) {
+  const dir = join(ROOT, "web", "herramientas", f.slug);
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, "index.html"), fichaHTML(f));
+}
+
+// ---------- 3) índice ----------
+const tiles = fichas
+  .map(
+    (f) => `<a class="tile" href="/herramientas/${esc(f.slug)}">
+  <div class="emoji">${esc(f.emoji || "🧩")}</div>
+  <h3>${esc(f.nombre)}</h3>
+  <p>${esc(f.unaLinea)}</p>
+  <span class="badge">${esc(f.estado || "Disponible")}</span>
+</a>`
+  )
+  .join("\n");
+
+const indexBody = `
+<div class="hero">
+  <h1>Herramientas</h1>
+  <p class="lead">Skills de IA que construí para mi medio y te comparto. Instálalas en Claude Code en un minuto.</p>
+</div>
+<div class="grid">${tiles}</div>
+`;
+mkdirSync(join(ROOT, "web", "herramientas"), { recursive: true });
+writeFileSync(
+  join(ROOT, "web", "herramientas", "index.html"),
+  shell(`${cat.tituloSitio}`, indexBody)
+);
+
+console.log(`OK · ${fichas.length} ficha(s) generada(s) + marketplace.json`);
+for (const f of fichas) console.log(`   /herramientas/${f.slug}`);

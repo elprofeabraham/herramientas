@@ -1,0 +1,35 @@
+{
+  "slug": "seo-cwv-skill",
+  "id": "seo-cwv",
+  "nombre": "Auditoría SEO · Core Web Vitals",
+  "unaLinea": "Le enseñas a la IA a revisar cualquier página web y decirte, en palabras que entiendes, qué tiene mal.",
+  "emoji": "🚦",
+  "estado": "Disponible",
+
+  "queHace": [
+    "Le das la dirección de un sitio y en menos de dos minutos te dice qué está pasando: velocidad, SEO y si está listo para que la IA lo recomiende.",
+    "Te lo explica clarito (no en lenguaje de programador) y te entrega un reporte profesional en PDF con tu nombre, listo para enseñárselo a un cliente o a tu equipo.",
+    "Opcional: además de auditar, puede aplicar los arreglos en WordPress para poner los Core Web Vitals en verde — con respaldos y tu aprobación."
+  ],
+  "queNecesitas": [
+    "Claude Code + una suscripción de Claude.",
+    "Node.js 18 o superior (nodejs.org).",
+    "Una API key gratuita de PageSpeed Insights (Google).",
+    "Chrome, Chromium o Edge instalado (para generar el PDF)."
+  ],
+  "queEs": "Una skill de Claude Code con dos modos: AUDITAR (solo lectura, seguro) y OPTIMIZAR (aplica arreglos en WordPress/cPanel, con red de seguridad). Multisitio: cada cliente es un archivo de configuración, así puedes revisar varios sitios sin mezclarlos.",
+  "comoSeUsa": [
+    { "paso": "En Claude Code, pídele:", "code": "usa la skill seo-cwv para https://el-sitio-que-sea.com" },
+    { "paso": "O con el comando corto:", "code": "/auditar-sitio https://el-sitio-que-sea.com" },
+    { "paso": "Cuando quieras aplicar los arreglos (con aprobación):", "code": "/optimizar-sitio" }
+  ],
+  "gancho": "Con esto ya tienes el primer paso: saber qué arreglar. La skill que lo arregla sola te la enseño en el próximo video.",
+
+  "marketplace": {
+    "source": "./plugins/seo-cwv",
+    "version": "1.0.0",
+    "descripcionCorta": "Audita y arregla SEO, AEO y Core Web Vitals de un sitio, con reporte en PDF de tu marca.",
+    "keywords": ["seo", "core-web-vitals", "aeo", "wordpress", "auditoria", "pagespeed"],
+    "licencia": "MIT"
+  }
+}
