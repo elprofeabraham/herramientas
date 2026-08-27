@@ -4,7 +4,8 @@
   "owner": { "name": "El Profe Abraham", "url": "https://elprofeabraham.com" },
   "github": "https://github.com/elprofeabraham/herramientas",
   "marketplaceAdd": "elprofeabraham/herramientas",
-  "sitioBase": "https://elprofeabraham.com",
+  "sitioBase": "https://herramientas.elprofeabraham.com",
+  "basePath": "",
   "cta": {
     "texto": "¿Quieres esta skill? Comenta la palabra VERDE en el video y te la mando.",
     "comunidad": "https://elprofeabraham.com/#comunidades"

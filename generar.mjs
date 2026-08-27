@@ -12,6 +12,9 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const cat = JSON.parse(readFileSync(join(ROOT, "catalogo.json"), "utf8"));
+// basePath: "" = subdominio (raíz);  "/herramientas" = subcarpeta del dominio.
+const BASE = cat.basePath || "";
+const OUT = join(ROOT, "web", BASE); // carpeta de salida real
 
 const fichas = readdirSync(join(ROOT, "fichas"))
   .filter((f) => f.endsWith(".json"))
@@ -181,7 +184,7 @@ const fichaHTML = (f) => {
 
   <div class="btnrow">
     <a class="btn" href="${esc(cat.github)}">Ver en GitHub</a>
-    <a class="btn ghost" href="/herramientas/">Todas las herramientas</a>
+    <a class="btn ghost" href="${BASE}/">Todas las herramientas</a>
   </div>
 </div>
 
@@ -191,7 +194,7 @@ const fichaHTML = (f) => {
 };
 
 for (const f of fichas) {
-  const dir = join(ROOT, "web", "herramientas", f.slug);
+  const dir = join(OUT, f.slug);
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, "index.html"), fichaHTML(f));
 }
@@ -199,7 +202,7 @@ for (const f of fichas) {
 // ---------- 3) índice ----------
 const tiles = fichas
   .map(
-    (f) => `<a class="tile" href="/herramientas/${esc(f.slug)}">
+    (f) => `<a class="tile" href="${BASE}/${esc(f.slug)}">
   <div class="emoji">${esc(f.emoji || "🧩")}</div>
   <h3>${esc(f.nombre)}</h3>
   <p>${esc(f.unaLinea)}</p>
@@ -215,11 +218,8 @@ const indexBody = `
 </div>
 <div class="grid">${tiles}</div>
 `;
-mkdirSync(join(ROOT, "web", "herramientas"), { recursive: true });
-writeFileSync(
-  join(ROOT, "web", "herramientas", "index.html"),
-  shell(`${cat.tituloSitio}`, indexBody)
-);
+mkdirSync(OUT, { recursive: true });
+writeFileSync(join(OUT, "index.html"), shell(`${cat.tituloSitio}`, indexBody));
 
 console.log(`OK · ${fichas.length} ficha(s) generada(s) + marketplace.json`);
-for (const f of fichas) console.log(`   /herramientas/${f.slug}`);
+for (const f of fichas) console.log(`   ${BASE}/${f.slug}`);
