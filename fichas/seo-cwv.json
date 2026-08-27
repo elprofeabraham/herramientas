@@ -14,7 +14,7 @@
   "queNecesitas": [
     "Claude Code + una suscripción de Claude.",
     "Node.js 18 o superior (nodejs.org).",
-    "Una API key gratuita de PageSpeed Insights (Google).",
+    { "texto": "Una API key gratuita de PageSpeed Insights (Google).", "url": "https://developers.google.com/speed/docs/insights/v5/get-started", "urlTexto": "Consíguela aquí" },
     "Chrome, Chromium o Edge instalado (para generar el PDF)."
   ],
   "queEs": "Una skill de Claude Code con dos modos: AUDITAR (solo lectura, seguro) y OPTIMIZAR (aplica arreglos en WordPress/cPanel, con red de seguridad). Multisitio: cada cliente es un archivo de configuración, así puedes revisar varios sitios sin mezclarlos.",

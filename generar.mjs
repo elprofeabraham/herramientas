@@ -20,7 +20,15 @@ const fichas = readdirSync(join(ROOT, "fichas"))
 // ---------- utilidades ----------
 const esc = (s = "") =>
   String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-const li = (arr) => arr.map((x) => `<li>${esc(x)}</li>`).join("\n");
+// Cada item puede ser un string o { texto, url, urlTexto } para agregar un link.
+const liItem = (x) => {
+  if (typeof x === "string") return `<li>${esc(x)}</li>`;
+  const link = x.url
+    ? ` <a href="${esc(x.url)}">${esc(x.urlTexto || "Ver")}</a>`
+    : "";
+  return `<li>${esc(x.texto)}${link}</li>`;
+};
+const li = (arr) => arr.map(liItem).join("\n");
 
 // ---------- 1) marketplace.json ----------
 const marketplace = {
